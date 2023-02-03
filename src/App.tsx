@@ -24,7 +24,7 @@ function App() {
     }).then((response) => response.json())
       .then((data) => {
         console.log('Success:', data);
-        setDatasource(data)
+        setDatasource(data.data)
       }).catch(e => {
         message.error('获取列表失败，请重试')
       }).finally(() => {
@@ -157,7 +157,7 @@ function App() {
         <Button type="primary" onClick={toggleCreateModal}>创建</Button>
       </div>
       <div className='list'>
-        <Table dataSource={dataSource} columns={columns} loading={loading} />;
+        <Table dataSource={dataSource} columns={columns} loading={loading} />
       </div>
       <CreateModal visible={visible} onConfirm={handleCreate} onCancel={toggleCreateModal} />
     </div>

@@ -29,7 +29,7 @@ export default function ConfirmLayer(props: ConfirmLayerProps) {
                 确认
             </Button>
         ]}>
-            <Input value={value} onChange={hanldeOnchange} />
+            <Input value={value} type="password" onChange={hanldeOnchange} />
         </Modal>
     );
 }
