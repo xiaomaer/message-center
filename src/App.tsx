@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Table, Button, Space, message } from 'antd';
-import type { ColumnsType,TableProps } from 'antd/es/table';
+import { Table, Button, Space, message, Select } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import 'antd/dist/reset.css';
 import ConfirmLayer from './ConfirmLayer';
 import CreateModal from './CreateModal'
@@ -8,16 +8,28 @@ import './App.scss';
 
 const host = 'https://api.notify.function.work'
 const pageSize = 20;
+const options = [
+  { label: '全部', value: '' },
+  { label: '完成', value: true },
+  { label: '未完成', value: false },
+]
+
+interface DataType {
+  title: string;
+  dataIndex: number;
+  key: number;
+  completed: boolean;
+}
+
 
 function App() {
   const [token, setToken] = useState('')
   const [visible, setVisible] = useState(false)
   const [dataSource, setDatasource] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [total,setTotal] = useState(0);
-  const [completed, setCompleted] = useState('');
+  const [total, setTotal] = useState(0);
 
-  const getList = useCallback(async (offset:number) => {
+  const getList = useCallback(async (offset: number, completed = '') => {
     setLoading(true)
     fetch(`${host}/v0/notifies?limit=${pageSize}&offset=${offset}&completed=${completed}`, {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
@@ -51,8 +63,8 @@ function App() {
     setVisible(!visible)
   }
 
-  const handlePagerOnChange = (page:number,pageSize:number) => {
-    getList((page-1)*pageSize);
+  const handlePagerOnChange = (page: number, pageSize: number) => {
+    getList((page - 1) * pageSize);
   }
 
   const handleCreate = async (values: object) => {
@@ -67,7 +79,7 @@ function App() {
       }
       await fetch(`${host}/v0/notifies`, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        credentials: 'omit', 
+        credentials: 'omit',
         headers: {
           token,
           'Content-Type': 'application/json'
@@ -87,7 +99,7 @@ function App() {
     try {
       await fetch(`${host}/v0/notifies/${values.id}`, {
         method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-        credentials: 'omit', 
+        credentials: 'omit',
         headers: {
           token,
         },
@@ -99,12 +111,9 @@ function App() {
     }
   }
 
-  interface DataType {
-    title:string; 
-    dataIndex: number;
-    key: number;
-    completed: boolean;
-  }
+  const handlFilter = useCallback((value: string) => {
+    getList(0, value)
+  }, [getList])
 
   const columns: ColumnsType<DataType> = [
     {
@@ -146,24 +155,16 @@ function App() {
       title: '状态',
       dataIndex: 'completed',
       key: 'completed',
-      filters: [
-        { text: '完成', value: true },
-        { text: '未完成', value: false },
-      ],
-      onFilter:  (value: number | string | boolean, record:DataType) => {
-        setCompleted(value as string);
-        return record.completed === value;
-      },
       render: (text: boolean) => {
         return text === true ? '完成' : '未完成'
       },
     },
     {
-      title: 'Action',
+      title: '操作',
       key: 'action',
       render: (text: string, record: object) => (
         <Space size="middle">
-          <a onClick={() => { handleDelete(record) }}>Delete</a>
+          <a onClick={() => { handleDelete(record) }}>删除</a>
         </Space>
       ),
     },
@@ -177,21 +178,24 @@ function App() {
   }
   return (
     <div className="container">
-      <div className='operation'>
+      <div className='header'>
+        <Select options={options} onChange={handlFilter} placeholder="请选择状态" defaultValue={''}></Select>
         <Button type="primary" onClick={toggleCreateModal}>创建</Button>
       </div>
       <div className='list'>
-        <Table dataSource={dataSource} 
-        columns={columns} 
-        loading={loading} 
-        pagination={{ 
-          total:total,
-          showTotal:(total) => `共 ${total} 条`,
-          pageSize:pageSize,
-          showSizeChanger:false,
-          onChange:handlePagerOnChange,
-        }}
-      />
+        <Table
+          rowKey='id'
+          dataSource={dataSource}
+          columns={columns}
+          loading={loading}
+          pagination={{
+            total,
+            showTotal: (total) => `共 ${total} 条`,
+            pageSize,
+            showSizeChanger: false,
+            onChange: handlePagerOnChange,
+          }}
+        />
       </div>
       <CreateModal visible={visible} onConfirm={handleCreate} onCancel={toggleCreateModal} />
     </div>

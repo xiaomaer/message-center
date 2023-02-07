@@ -28,7 +28,7 @@ export default function CreateModal(props: CreateModalProps) {
     };
 
     return (
-        <Modal title="创建消息" open={props.visible} onOk={handleOk} onCancel={props.onCancel} width={800}>
+        <Modal title="创建消息" open={props.visible} onOk={handleOk} onCancel={props.onCancel} width={800} cancelText="取消" okText="确定">
             <Form
                 name="basic"
                 labelCol={{ span: 5 }}

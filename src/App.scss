@@ -1,8 +1,15 @@
 .container{
   padding: 20px 40px;
+ 
 }
 
-.operation{
+.header{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 20px;
-  text-align: right;
+  .ant-select{
+    width: 200px;
+  }
 }
