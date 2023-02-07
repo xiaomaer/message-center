@@ -6,16 +6,19 @@ import CreateModal from './CreateModal'
 import './App.scss';
 
 const host = 'https://api.notify.function.work'
+const pageSize = 20;
 
 function App() {
   const [token, setToken] = useState('')
   const [visible, setVisible] = useState(false)
   const [dataSource, setDatasource] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [total,setTotal] = useState(0);
 
-  const getList = useCallback(async () => {
+  const getList = useCallback(async (offset:number) => {
     setLoading(true)
-    fetch(`${host}/v0/notifies`, {
+    console.log("offset",offset)
+    fetch(`${host}/v0/notifies?limit=${pageSize}&offset=${offset}`, {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       credentials: 'omit', // include, *same-origin, omit
       headers: {
@@ -24,7 +27,8 @@ function App() {
     }).then((response) => response.json())
       .then((data) => {
         console.log('Success:', data);
-        setDatasource(data.data)
+        setDatasource(data.data);
+        setTotal(data.total);
       }).catch(e => {
         message.error('获取列表失败，请重试')
       }).finally(() => {
@@ -34,7 +38,7 @@ function App() {
 
   useEffect(() => {
     if (token) {
-      getList();
+      getList(0);
     }
   }, [token, getList])
 
@@ -44,6 +48,10 @@ function App() {
 
   const toggleCreateModal = () => {
     setVisible(!visible)
+  }
+
+  const handlePagerOnChange = (page:number,pageSize:number) => {
+    getList((page-1)*pageSize);
   }
 
   const handleCreate = async (values: object) => {
@@ -67,7 +75,7 @@ function App() {
       });
       message.success('创建成功，将为你跳转到列表页面')
       setVisible(false);
-      getList();
+      getList(0);
     } catch (error) {
       message.error('创建失败，请重试')
     }
@@ -84,7 +92,7 @@ function App() {
         },
       });
       message.success('删除成功')
-      getList();
+      getList(0);
     } catch (error) {
       message.error('删除失败，请重试')
     }
@@ -157,7 +165,17 @@ function App() {
         <Button type="primary" onClick={toggleCreateModal}>创建</Button>
       </div>
       <div className='list'>
-        <Table dataSource={dataSource} columns={columns} loading={loading} />
+        <Table dataSource={dataSource} 
+        columns={columns} 
+        loading={loading} 
+        pagination={{ 
+          total:total,
+          showTotal:(total) => `共 ${total} 条`,
+          pageSize:pageSize,
+          showSizeChanger:false,
+          onChange:handlePagerOnChange,
+        }}
+      />
       </div>
       <CreateModal visible={visible} onConfirm={handleCreate} onCancel={toggleCreateModal} />
     </div>
