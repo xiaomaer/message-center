@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Table, Button, Space, message } from 'antd';
+import type { ColumnsType,TableProps } from 'antd/es/table';
 import 'antd/dist/reset.css';
 import ConfirmLayer from './ConfirmLayer';
 import CreateModal from './CreateModal'
@@ -14,11 +15,11 @@ function App() {
   const [dataSource, setDatasource] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total,setTotal] = useState(0);
+  const [completed, setCompleted] = useState('');
 
   const getList = useCallback(async (offset:number) => {
     setLoading(true)
-    console.log("offset",offset)
-    fetch(`${host}/v0/notifies?limit=${pageSize}&offset=${offset}`, {
+    fetch(`${host}/v0/notifies?limit=${pageSize}&offset=${offset}&completed=${completed}`, {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
       credentials: 'omit', // include, *same-origin, omit
       headers: {
@@ -98,7 +99,14 @@ function App() {
     }
   }
 
-  const columns = [
+  interface DataType {
+    title:string; 
+    dataIndex: number;
+    key: number;
+    completed: boolean;
+  }
+
+  const columns: ColumnsType<DataType> = [
     {
       title: '序号',
       dataIndex: 'id',
@@ -138,6 +146,14 @@ function App() {
       title: '状态',
       dataIndex: 'completed',
       key: 'completed',
+      filters: [
+        { text: '完成', value: true },
+        { text: '未完成', value: false },
+      ],
+      onFilter:  (value: number | string | boolean, record:DataType) => {
+        setCompleted(value as string);
+        return record.completed === value;
+      },
       render: (text: boolean) => {
         return text === true ? '完成' : '未完成'
       },
