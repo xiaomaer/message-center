@@ -131,11 +131,7 @@ function App() {
       dataIndex: 'content',
       key: 'content',
     },
-    {
-      title: '通知总次数',
-      dataIndex: 'maxNotifyCount',
-      key: 'maxNotifyCount',
-    },
+
     {
       title: '通知规则',
       dataIndex: 'spec',
@@ -152,10 +148,20 @@ function App() {
       key: 'endAt',
     },
     {
+      title: '总通知次数',
+      dataIndex: 'maxNotifyCount',
+      key: 'maxNotifyCount',
+    },
+    {
+      title: '已通知次数',
+      dataIndex: 'notifyCoun',
+      key: 'notifyCoun',
+    },
+    {
       title: '状态',
       dataIndex: 'completed',
       key: 'completed',
-      render: (text: boolean) => {
+      render: (text: boolean) => {r
         return text === true ? '完成' : '未完成'
       },
     },
