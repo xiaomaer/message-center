@@ -161,7 +161,7 @@ function App() {
       title: '状态',
       dataIndex: 'completed',
       key: 'completed',
-      render: (text: boolean) => {r
+      render: (text: boolean) => {
         return text === true ? '完成' : '未完成'
       },
     },
