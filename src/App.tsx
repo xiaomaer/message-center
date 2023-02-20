@@ -154,8 +154,8 @@ function App() {
     },
     {
       title: '已通知次数',
-      dataIndex: 'notifyCoun',
-      key: 'notifyCoun',
+      dataIndex: 'notifyCount',
+      key: 'notifyCount',
     },
     {
       title: '状态',
