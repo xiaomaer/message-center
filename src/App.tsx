@@ -6,7 +6,8 @@ import ConfirmLayer from './ConfirmLayer';
 import CreateModal from './CreateModal'
 import './App.scss';
 
-const host = 'https://api.notify.function.work'
+const backend = document.getElementsByTagName('meta').namedItem('backend')?.content;
+const host = backend === '__APP_CONFIG__'? 'https://api.notify.function.work': backend;
 const pageSize = 20;
 const options = [
   { label: '全部', value: '' },
@@ -151,6 +152,9 @@ function App() {
       title: '总通知次数',
       dataIndex: 'maxNotifyCount',
       key: 'maxNotifyCount',
+       render: (text: number) => {
+        return text === -1 ? '无限' : text
+      },
     },
     {
       title: '已通知次数',
