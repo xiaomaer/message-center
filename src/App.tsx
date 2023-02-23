@@ -7,7 +7,7 @@ import CreateModal from './CreateModal'
 import './App.scss';
 
 const backend = document.getElementsByTagName('meta').namedItem('backend')?.content;
-const host = backend === '__APP_CONFIG__'? 'https://api.notify.function.work': backend;
+const host = backend === '__APP_CONFIG__' ? 'https://notify.function.work' : backend;
 const pageSize = 20;
 const options = [
   { label: '全部', value: '' },
@@ -34,7 +34,7 @@ function App() {
     setLoading(true)
     fetch(`${host}/v0/notifies?limit=${pageSize}&offset=${offset}&completed=${completed}`, {
       method: 'GET', // *GET, POST, PUT, DELETE, etc.
-      credentials: 'omit', // include, *same-origin, omit
+      // credentials: 'omit', // include, *same-origin, omit
       headers: {
         token,
       },
@@ -80,7 +80,7 @@ function App() {
       }
       await fetch(`${host}/v0/notifies`, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        credentials: 'omit',
+        // credentials: 'omit',
         headers: {
           token,
           'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ function App() {
     try {
       await fetch(`${host}/v0/notifies/${values.id}`, {
         method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-        credentials: 'omit',
+        // credentials: 'omit',
         headers: {
           token,
         },
@@ -142,17 +142,23 @@ function App() {
       title: '生效时间',
       dataIndex: 'startAt',
       key: 'startAt',
+      render: (text: number) => {
+        return text === 0 ? '未设置' : text
+      },
     },
     {
       title: '失效时间',
       dataIndex: 'endAt',
       key: 'endAt',
+      render: (text: number) => {
+        return text === 0 ? '未设置' : text
+      },
     },
     {
       title: '总通知次数',
       dataIndex: 'maxNotifyCount',
       key: 'maxNotifyCount',
-       render: (text: number) => {
+      render: (text: number) => {
         return text === -1 ? '无限' : text
       },
     },
