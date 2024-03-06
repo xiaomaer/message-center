@@ -53,7 +53,7 @@ export default function CreateModal(props: CreateModalProps) {
                     <Input />
                 </Form.Item>
                 <Form.Item name="channelName" label="通知渠道" rules={[{ required: true, message: '请选择通知渠道' }]}>
-                    <Select placeholder="请选择通知渠道" options={[{ value: '2', label: '定时通知' }]}></Select>
+                    <Select placeholder="请选择通知渠道" options={[{ value: '定时通知', label: '定时通知' }, { value: '报工提示', label: '报工提示' }]}></Select>
                 </Form.Item>
                 <Form.Item label="通知次数"
                     name="maxNotifyCount"

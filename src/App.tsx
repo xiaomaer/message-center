@@ -74,7 +74,7 @@ function App() {
       const { channelName, startAt, endAt, ...rest } = values as any
       const data = {
         ...rest,
-        channelName: channelName === '2' ? '定时通知' : '',
+        channelName: channelName,
         startAt: startAt ? startAt.unix() : 0,
         endAt: endAt ? endAt.unix() : 0
       }
