@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Form, Input, InputNumber, Select, DatePicker } from 'antd';
+import { Modal, Form, Input, InputNumber, Select, DatePicker, Switch } from 'antd';
 
 
 type CreateModalProps = {
@@ -72,6 +72,12 @@ export default function CreateModal(props: CreateModalProps) {
                     rules={[{ required: true, message: '请输入cron规则' }]}
                 >
                     <Input />
+                </Form.Item>
+                <Form.Item
+                    label="仅法定工作日"
+                    name="workDay"
+                >
+                    <Switch />
                 </Form.Item>
             </Form>
         </Modal>

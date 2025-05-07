@@ -139,6 +139,14 @@ function App() {
       key: 'spec',
     },
     {
+      title: '仅法定工作日',
+      dataIndex:'workDay',
+      key:'workDay',
+      render: (text: boolean) => {
+        return text ? '✔' : '✘'
+      },
+    },
+    {
       title: '生效时间',
       dataIndex: 'startAt',
       key: 'startAt',
